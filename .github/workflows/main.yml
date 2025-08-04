@@ -1,0 +1,28 @@
+name: Build NPC Windows EXE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20'
+
+    - name: Build Windows 64-bit npc.exe
+      run: |
+        cd nps/client
+        GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o npc.exe
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: npc-windows-x64
+        path: nps/client/npc.exe
+        retention-days: 7
